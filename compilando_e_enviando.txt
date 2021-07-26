@@ -1,0 +1,13 @@
+Host:
+
+gedit formiga_mecatronica_viola.c &  //Codar
+
+. /usr/local/oecore-x86_64/environment-setup-armv7at2hf-neon-angstrom-linux-gnueabi
+
+export CROSS_COMPILE=~/oe-core/build/out-glibc/sysroots/x86_64-linux/usr/bin/arm-angstrom-linux-gnueabi/arm-angstrom-linux-gnueabi-
+
+${CC} -Wall formiga_mecatronica_viola.c -o formiga_mecatronica_viola
+
+Embedded:
+
+./formiga_mecatronica_viola
