@@ -3,11 +3,13 @@
 #include <unistd.h>
 #include <string.h>
 
-
+/*
 
 double map(double x, double in_min, double in_max, double out_min, double out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+*/
 
 
 //Different state of an ant robot
@@ -16,14 +18,6 @@ enum states {
 	WAITING_MOVEMENT,
 	EXIT
 } state;
-
-
-//Different type events
-enum events {
-	COMMAND_SENT,
-	RESTART_LOOP,
-	STOP_LOOPING,
-};
 
 
 int main(int argc, char **argv)
@@ -36,57 +30,50 @@ int main(int argc, char **argv)
 	//indicates that the robot will locomove forward
 	int forward = 1;					
 
-
-	switch(state) {
-		case SENDING_COMMAND:
-			printf("\nPor favor entrar um comando. (frente/tras/sair)\n");
-			scanf( "%s" , response);
-			if ((strcmp (response, "frente")) == 0)
-			{
-				event = COMMAND_SENT;
-				forward = 1;
-				printf("\nAndando para frente! %d \n", forward);
-			}
-			else if ((strcmp (response, "tras")) == 0)
-			{
-				event = COMMAND_SENT;
-				forward = 0;
-				printf("\nAndando para tras! %d \n", forward);
-			}
-			else if ((strcmp (response, "sair")) == 0)
-			{
-				event = STOP_LOOPING;
-			}
-			else 
-			{
-				printf("\nNao foi possivel compreender o comando!!!\n");
-				event = RESTART_LOOP;
-			}
-		
-			switch(event) {
-			case COMMAND_SENT:
-				state = WAITING_MOVEMENT;
-				break;
-			case RESTART_LOOP:
-				state = WAITING_MOVEMENT;
-				break;
-			case STOP_LOOPING:
-				state = WAITING_MOVEMENT;
-				break;
-				/*
-			default:
-				exit(1);
-				break;     
-			*/
-			}  
-			break;
+	//state machine loop
+	while(1){
+		switch(state) {
+			case SENDING_COMMAND:
+				printf("\nPor favor entrar um comando. (frente/tras/sair)\n");
+				scanf( "%s" , response);
+				if ((strcmp (response, "frente")) == 0)
+				{
+					state = WAITING_MOVEMENT;
+					printf("\nAndando para frente!\n");
+				}
+				else if ((strcmp (response, "tras")) == 0)
+				{
+					state = WAITING_MOVEMENT;
+					printf("\nAndando para tras!\n");
+				}
+				else if ((strcmp (response, "sair")) == 0)
+				{
+					state = EXIT;
+				}
+				else 
+				{
+					printf("\nNao foi possivel compreender o comando!!!\n");
+					state = SENDING_COMMAND;
+				}
 			
-		case WAITING_MOVEMENT:
-			break;
-		case EXIT:
-			break;
-}
+				
+			case WAITING_MOVEMENT:
+				int movement_finished = 0;
+				if(movement_finished == 1)
+				{
+					state = SENDING_COMMAND;
+				}
+				else
+				{
+					state = WAITING_MOVEMENT;
+				}
+				break;
 
+			case EXIT:
+				exit(0);
+				break;
+	}
+}
 
 
 
@@ -124,7 +111,7 @@ int main(int argc, char **argv)
 	}
 	*/
 	
-	printf("\nHello World !!!\n");        // print "Hello World" message on screen
+	printf("\nFim do processo!\n");        // print "Hello World" message on screen
 	return(0);
 }
 
