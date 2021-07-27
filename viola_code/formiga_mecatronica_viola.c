@@ -12,46 +12,46 @@ double map(double x, double in_min, double in_max, double out_min, double out_ma
 
 //Different state of an ant robot
 enum states {
-    SENDING_COMMAND,
-    WAITING_MOVEMENT,
+	SENDING_COMMAND,
+	WAITING_MOVEMENT,
 	EXIT
 } state;
 
 
 //Different type events
 enum events {
-    COMMAND_SENT,
-    RESTART_LOOP,
-    STOP_LOOPING,
+	COMMAND_SENT,
+	RESTART_LOOP,
+	STOP_LOOPING,
 };
 
 
 int main(int argc, char **argv)
 {
+	char response[256];
 	//start robot waiting to send command
 	state =  SENDING_COMMAND;
 	enum events event = RESTART_LOOP;	
 
 	//indicates that the robot will locomove forward
-	bool forward = true;					
+	int forward = 1;					
 
 
 	switch(state) {
 		case SENDING_COMMAND:
-			char response[256];
 			printf("\nPor favor entrar um comando. (frente/tras/sair)\n");
 			scanf( "%s" , response);
 			if ((strcmp (response, "frente")) == 0)
 			{
 				event = COMMAND_SENT;
-				bool forward = true;
-				printf("\nAndando para frente!\n");
+				forward = 1;
+				printf("\nAndando para frente! %d \n", forward);
 			}
 			else if ((strcmp (response, "tras")) == 0)
 			{
 				event = COMMAND_SENT;
-				bool forward = false;
-				printf("\nAndando para tras!\n");
+				forward = 0;
+				printf("\nAndando para tras! %d \n", forward);
 			}
 			else if ((strcmp (response, "sair")) == 0)
 			{
@@ -67,31 +67,25 @@ int main(int argc, char **argv)
 			case COMMAND_SENT:
 				state = WAITING_MOVEMENT;
 				break;
-			default:
-				exit(1);
-				break;
-			}       
-			break;
-			/*
-		case LOOP:
-			switch(event) {
-			case PRINT_HELLO:
-				printf("Hello World!\n");
+			case RESTART_LOOP:
+				state = WAITING_MOVEMENT;
 				break;
 			case STOP_LOOPING:
-				state = END;
+				state = WAITING_MOVEMENT;
 				break;
+				/*
 			default:
 				exit(1);
-				break;
-			}
+				break;     
+			*/
+			}  
 			break;
-		case END:
-			exit(1);
+			
+		case WAITING_MOVEMENT:
 			break;
-		}
-		*/
-
+		case EXIT:
+			break;
+}
 
 
 
