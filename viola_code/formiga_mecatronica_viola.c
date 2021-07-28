@@ -1,7 +1,15 @@
 #include <stdio.h>
-#include <time.h>     
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <time.h>
+
+#include <net/if.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+
+#include <linux/can.h>
+#include <linux/can/raw.h>
 
 /*
 
@@ -11,6 +19,56 @@ double map(double x, double in_min, double in_max, double out_min, double out_ma
 
 */
 
+
+//This function decides what each leg has to do so the robot does the movement requested
+//for now, only having forward and backward movements, it only sends 0 (backward) and 1 (forward) for
+//all legs, being 3 of them 180° phase of the other 3
+void send_movement(int movement_number)
+{
+	if(movement_number == 0)
+	{
+		for (int leg = 0; leg < 6; leg++)
+		{
+			if(leg % 2 == 0)
+			{
+				send_message_to_leg(leg, 0, 0);
+			}
+			else
+			{
+				send_message_to_leg(leg, 0, 50);
+			}
+		}
+	}
+
+	if(movement_number == 1)
+	{
+		for (int leg = 0; leg < 6; leg++)
+		{
+			if(leg % 2 == 0)
+			{
+				send_message_to_leg(leg, 1, 0);
+			}
+			else
+			{
+				send_message_to_leg(leg, 1, 50);
+			}
+		}
+	}
+}
+
+
+send_message_to_leg(int leg, int direction, int phase)
+{
+	frame.can_id = 0x555;
+	frame.can_dlc = 5;
+	sprintf(frame.data, "Hello");
+
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("Write");
+		return 1;
+	}
+	
+}
 
 //Different state of an ant robot
 enum states {
@@ -30,6 +88,25 @@ int main(int argc, char **argv)
 	//indicates that the robot will locomove forward
 	int forward = 1;					
 
+	//openning socket
+	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+		perror("Socket");
+		return 1;
+	}
+	strcpy(ifr.ifr_name, "can0" );
+	ioctl(s, SIOCGIFINDEX, &ifr);
+	memset(&addr, 0, sizeof(addr));
+	addr.can_family = AF_CAN;
+	addr.can_ifindex = ifr.ifr_ifindex;
+
+	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+		perror("Bind");
+		return 1;
+	}
+
+
+
+
 	//state machine loop
 	while(1){
 		switch(state) {
@@ -39,11 +116,13 @@ int main(int argc, char **argv)
 				if ((strcmp (response, "frente")) == 0)
 				{
 					state = WAITING_MOVEMENT;
+					send_movement(1);
 					printf("\nAndando para frente!\n");
 				}
 				else if ((strcmp (response, "tras")) == 0)
 				{
 					state = WAITING_MOVEMENT;
+					send_movement(0);
 					printf("\nAndando para tras!\n");
 				}
 				else if ((strcmp (response, "sair")) == 0)
