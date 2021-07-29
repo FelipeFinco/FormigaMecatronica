@@ -59,15 +59,7 @@ void send_movement(int movement_number)
 
 send_message_to_leg(int leg, int direction, int phase)
 {
-	frame.can_id = 0x555;
-	frame.can_dlc = 5;
-	sprintf(frame.data, "Hello");
 
-	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-		perror("Write");
-		return 1;
-	}
-	
 }
 
 //Different state of an ant robot
@@ -82,18 +74,25 @@ int main(int argc, char **argv)
 {
 	char response[256];
 	//start robot waiting to send command
-	state =  SENDING_COMMAND;
-	enum events event = RESTART_LOOP;	
+	state =  SENDING_COMMAND;	
 
 	//indicates that the robot will locomove forward
-	int forward = 1;					
+	int forward = 1;
+	
+	int movement_finished = 0;
+	
+	
+	int s; 
+	struct sockaddr_can addr;
+	struct ifreq ifr;
+	struct can_frame frame;					
 
 	//openning socket
 	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
 		perror("Socket");
 		return 1;
 	}
-	strcpy(ifr.ifr_name, "can0" );
+	strcpy(ifr.ifr_name, "vcan0" );
 	ioctl(s, SIOCGIFINDEX, &ifr);
 	memset(&addr, 0, sizeof(addr));
 	addr.can_family = AF_CAN;
@@ -104,7 +103,15 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	frame.can_id = 0x555;
+	frame.can_dlc = 5;
+	sprintf(frame.data, "Hello");
 
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("Write");
+		return 1;
+	}
+	
 
 
 	//state machine loop
@@ -116,12 +123,14 @@ int main(int argc, char **argv)
 				if ((strcmp (response, "frente")) == 0)
 				{
 					state = WAITING_MOVEMENT;
+					movement_finished = 0;
 					send_movement(1);
 					printf("\nAndando para frente!\n");
 				}
 				else if ((strcmp (response, "tras")) == 0)
 				{
 					state = WAITING_MOVEMENT;
+					movement_finished = 0;
 					send_movement(0);
 					printf("\nAndando para tras!\n");
 				}
@@ -137,7 +146,6 @@ int main(int argc, char **argv)
 			
 				
 			case WAITING_MOVEMENT:
-				int movement_finished = 0;
 				if(movement_finished == 1)
 				{
 					state = SENDING_COMMAND;
