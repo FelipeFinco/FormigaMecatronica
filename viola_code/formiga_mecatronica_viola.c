@@ -62,7 +62,7 @@ send_message_to_leg(int leg, int direction, int phase)
 
 }
 
-//Different state of an ant robot
+//Different state of Toradex controller
 enum states {
 	SENDING_COMMAND,
 	WAITING_MOVEMENT,
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 			case EXIT:
 				exit(0);
 				break;
-	}
+		}
 }
 
 

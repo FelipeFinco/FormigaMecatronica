@@ -8,6 +8,8 @@ export CROSS_COMPILE=~/oe-core/build/out-glibc/sysroots/x86_64-linux/usr/bin/arm
 
 ${CC} -Wall formiga_mecatronica_viola.c -o formiga_mecatronica_viola
 
+scp formiga_mecatronica_viola root@172.17.2.100:/home/root
+
 Embedded:
 
 ./formiga_mecatronica_viola

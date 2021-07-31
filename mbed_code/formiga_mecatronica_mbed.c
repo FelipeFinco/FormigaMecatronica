@@ -9,6 +9,15 @@ const int MOT_PWM_BACK = 900;
 const int MOT_PWM_FRONT = 2100;
 const int MOT_PWM_DOWN = 1100;
 const int MOT_PWM_UP = 1900;
+const int System_Frequency = 50;        //frequency of processing and PWM atualization in hz
+const int period_of_full_movement = 3;  //period of each movement of the robot in seconds
+
+//Different state of MBED controller
+enum states {
+	WAITING_COMMAND,
+	SENDING_COMMAND
+} state;
+
 
 double map(double x, double in_min, double in_max, double out_min, double out_max) 
 {
@@ -36,14 +45,47 @@ int vertical_movement(double completion)
 }
  
 int main() {
+    clock_t t_system = clock();
+
     printf("main()\n");
     CANMessage msg;
+    state = WAITING_COMMAND;
+
     while(1) {
-        printf("loop()\n");
-        if(can1.read(msg)) {
-            printf("Message received: %d\n", msg.data[0]);
-            led1 = !led1;
-        } 
-        wait(0.2);
+        if
+        switch(state) {
+			case WAITING_COMMAND:
+				printf("loop()\n");
+                if(can1.read(msg)) {
+                    printf("Message received: %d\n", msg.data[0]);
+                    led1 = !led1;
+                    if(msg_receiver(msg.data))
+                    {
+                        state = SENDING_COMMAND;
+                    }
+                    else
+                    {
+
+                    }
+                } 
+                wait(0.2);
+                break;
+				
+			case SENDING_COMMAND:
+				if(movement_finished == 1)
+				{
+					state = WAITING_COMMAND;
+				}
+				else
+				{
+					state = SENDING_COMMAND;
+				}
+				break;
+
+			case EXIT:
+				exit(0);
+				break;
+		}
+        
     }
 }
