@@ -28,5 +28,5 @@ Tendo em vista a proposta do protótipo o movimento de formigas foi observado af
 <img src="./img/numeros_pernas.png" align="center"
      alt="Figura 1" height="200">
 
-
+Com essa lógica foi possível utilizar um input do usuário para a toradex e assim mandar apenas duas informações por motor para cada MBED 
 # Conclusão/Resultados
