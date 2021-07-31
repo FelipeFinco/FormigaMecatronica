@@ -25,7 +25,7 @@ Projeto final da matéria Sistemas Embarcados do primeiro semestre de 2021. Mat�
 
 # Desenvolvimento
 Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares, logo, apartir da fase e sentido do movimento de uma pata é possível determinar o da outras 5 como mostra o gráfico abaixo
-<img src="./img/numero_pernas.png" align="center"
+<img src="./img/numeros_pernas.png" align="center"
      alt="Figura 1" height="200">
 
 
