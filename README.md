@@ -14,22 +14,19 @@ Projeto final da matéria Sistemas Embarcados do primeiro semestre de 2021. Mat�
 
 # Introdução
 
-Dentro da aeronautica, a determinação e controle de atitude (Attitude Detemination and Control - ADC) de uma aeronave é de fundamental importância para a existência do voo. Com a crescente utilização de Veículos Aéreos Não Tripulados (VANT's) para as mais variadas aplicações, iniciou-se um processo de barateamento da tecnologia de ADC, visando disseminar ainda mais a utilização desses veículos e tornar possível aplicações que não tenham capacidade de prover grandes investimentos. 
+ Dentro da robótica robos hexapodes possuem uma ampla gama de utilização devido a facilidade de locomoção em terrenos acidentados, sendo utilizados principalmente em meios agricolas e até mesmo espaciais.
 
-
-Este trabalho consiste na implementação de um sistema de fusão sensorial simplificado, o qual permite aquisitar sinais de uma unidade de medida inercial (*Inertial Measurement Unit - IMU*), calcular a atitude desse sensor - módulo que estaria presente na aeronave - e enviar esses sinais para um computador de monitoramento (*Ground Station*). Para isso, será utilizada uma BeagleBone Blue como dispositivo embarcado, uma placa de desenvolvimento com inúmeros recursos voltados para robótica (como uma *IMU*) além de um computador de propósito geral, que servirá como *Ground Station*. Na *Ground Station*, os dados de atitude serão visualizados através de um modelo 3D de uma aeronave, a qual seguirá a atitude da placa de desenvolvimento, assim como seria caso a placa estivesse presente em um *VANT*, além de exibir os gráficos de rolagem, arfagem e guinada em função do tempo. A parte embarcada do sistema é fundamental para o voo de qualquer aeronave autônoma, já a parte desenvolvida para a *Ground Station*, imagina-se como exemplo de utilização no desenvolvimento de aeronaves de pequeno porte, para monitorar as variáveis principais de atitude, conseguindo avaliar o funcionamento do modelo assim como o desempenho do projeto em manobras. 
-
-
+ Este trabalho consiste na implementação da lógica de movimentação do robo em um sistema de hardware já existente, o qual consiste em uma placa toradex que possui grande robustez, escalabilidade e compatibilidade com o Linux, duas MBEDS para complementação devido seus recursos open source e modularização além dos 12 motores (2 por perna) do robos, caracterizando um sistema embarcado robusto, com grande facilidade de atualização e desenvolvimento. Assim, o trabalho passou pelas etapas de concepção da lógica de movimentação e integração dos motores, criação dos códigos, comunicação CAN entre as placas e implementação a distância do software no hardware descrito acima.
+ 
 # Proposta/objetivo
-De maneira geral, deseja-se sempre monitorar o estado de todas as variáveis possíveis de uma aeronave, principalmente em seu estado de desenvolvimento. Em uma aplicação real, o *link* entre a aeronave e a *Ground Station* não compõe a lista de funcionalidades mais relevantes para operação do sistema. No entanto, para fins didáticos e para que os conceitos desenvolvidos na disciplina pudessem ser aplicados sem complicações adicionais, propôs-se desenvolver algumas partes desse *link* apenas para as variáveis de atitude, de modo a iniciar uma arquitetura de funcionamento para esse sistema embarcado proposto e o desenvolvimento nessa área. Para estudantes futuros que tenham interesse em dar continuidade ao projeto, inúmeras possibilidades de integrações e desenvolvimentos futuros poderiam trazer aplicabilidade real ao sistema.
+ De maneira geral, deseja-se que o robo hexapode, aqui chamado de "formiga robótica", possa se movimentar nos dois sentidos em apenas uma direção utilizando-se da comunicação mais simples possível entre a toradex e ambas MBED buscando ainda a divisão de processamento entre elas.
 
-O *link* discutido envolve um conjunto de operações bastante complexas. Considerando o modelo *OSI*, tomando, por exemplo, a camada física da comunicação, inúmeros desafios já estariam presentes no desenvolvimento, como a determinação do nível de potência do sinal transmitido, tipo de modulação, antena e seus ganhos, apontamento e afins. O sistema proposto foca em desenvolver: 
-* A aquisição de dados, considerando acesso direto ao barramento no qual o sensor inercial está presente
-* O processamento deles e a transformação dos valores em ângulos de *Euler*/*Tait-Bryan*
-* Envio, via *socket*, de um pacote de informação contendo os ângulos 
-
-Vale ressaltar que em uma aplicação real, o pacote conteria redundâncias, checagem e correção de erros, além de mais informação que só os ângulos de atitude. Como a ideia neste trabalho foi criar familiaridade com o desenvolvimento de sistemas embarcados por parte dos membros, apenas conceitos mais triviais foram levados em conta. 
+ Para tal buscou-se caracterizar o movimento de todos os motores apenas por duas variaveis - Fase e sentido - através da integração do movimento das pernas, uma vez que três pernas se moverão juntas enquanto outras três permanecerão em repouso. Toda esta lógica de movimentação foi feita na Toradex para que apenas duas variaveis fossem passadas para a MBED e assim esta conseguisse processá-las e criar o sinal de movimentação do motor. 
 
 # Desenvolvimento
+Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares, logo, apartir da fase e sentido do movimento de uma pata é possível determinar o da outras 5 como mostra o gráfico abaixo
+<img src="./img/numeros_pernas.png" align="center"
+     alt="Figura 1" height="200">
 
+Com essa lógica foi possível utilizar um input do usuário para a toradex e assim mandar apenas duas informações por motor para cada MBED 
 # Conclusão/Resultados
