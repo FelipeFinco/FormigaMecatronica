@@ -1,3 +1,5 @@
+Toradex:
+
 Host:
 
 gedit formiga_mecatronica_viola.c &  //Codar
@@ -12,4 +14,22 @@ scp formiga_mecatronica_viola root@172.17.2.100:/home/root
 
 Embedded:
 
+ssh root@172.17.2.100 //se nao tiver conectado na placa
+
 ./formiga_mecatronica_viola
+
+
+
+MBED:
+Compila na IDE online
+
+Transfere o arquivo .bin baixado para a MBED via USB (como um pendrive)
+
+sudo gtkterm (comando terminal)
+
+Configuration -> port 
+port: /dev/ttyACM0
+baud rate: 9600
+
+control signals -> send break
+
