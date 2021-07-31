@@ -24,8 +24,8 @@ Projeto final da matéria Sistemas Embarcados do primeiro semestre de 2021. Mat�
  Para tal buscou-se caracterizar o movimento de todos os motores apenas por duas variaveis - Fase e sentido - através da integração do movimento das pernas, uma vez que três pernas se moverão juntas enquanto outras três permanecerão em repouso. Toda esta lógica de movimentação foi feita na Toradex para que apenas duas variaveis fossem passadas para a MBED e assim esta conseguisse processá-las e criar o sinal de movimentação do motor. 
 
 # Desenvolvimento
-Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida em três patas de forma a manter um plano de apoio no chão, vide figura 1, a partir do momento em que essas tres patas tocam o chão, o movimento se da nas outras três, logo, apartir da fase e sentido do movimento de uma pata é possível determinar o da outras 5 como mostra o gráfico abaixo 
-<img src="./img/movimento_perna.png" align="center"
-     alt="Figura 1" height="200">
+Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares, logo, apartir da fase e sentido do movimento de uma pata é possível determinar o da outras 5 como mostra o gráfico abaixo
+<img src="./img/movimento_perna.png" 
+
 
 # Conclusão/Resultados
