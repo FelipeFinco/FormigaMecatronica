@@ -29,8 +29,15 @@ struct can_frame frame;
 
 
 
-void send_message_to_leg(char msg[5])
+void send_message_to_leg(int msg_int[5])
 {
+	char msg[6];
+	for (size_t i = 0; i < 6; i++)
+	{
+		msg[i]=msg_int[i];
+	}
+	msg[6] = "\0";
+	
 	#ifdef SEND_BY_CAN
 	sprintf(frame.data, msg);
 	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
@@ -40,11 +47,11 @@ void send_message_to_leg(char msg[5])
 
 	#else
 	printf("\nA mensagem enviada para a MBED seria: %s", msg);
-	printf("\nNumero 0: %c,%d", msg[0]);
-	printf("\nNumero 1: %c,%d", msg[1]);
-	printf("\nNumero 2: %c,%d", msg[2]);
-	printf("\nNumero 3: %c,%d", msg[3]);
-	printf("\nNumero 4: %c,%d", msg[4]);
+	printf("\nNumero 0: %c,%d", msg[0], msg[0]);
+	printf("\nNumero 1: %c,%d", msg[1], msg[1]);
+	printf("\nNumero 2: %c,%d", msg[2], msg[2]);
+	printf("\nNumero 3: %c,%d", msg[3], msg[3]);
+	printf("\nNumero 4: %c,%d", msg[4], msg[4]);
 	#endif
 }
 
@@ -66,10 +73,12 @@ void send_movement(int movement_number)
 		if(leg % 2 == 0)
 		{
 			msg[byte] = msg[byte] | 1<<bit;
+			printf("\nRegistrando 1 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
 		else
 		{
 			msg[byte] = (msg[byte] | 0<<bit);
+			printf("\nRegistrando 0 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
 
 		bit++;
@@ -79,11 +88,13 @@ void send_movement(int movement_number)
 		if(movement_number == 0)
 		{
 			msg[byte] = (msg[byte] | 0<<bit);
+			printf("\nRegistrando 1 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
 
 		else if(movement_number == 1)
 		{
 			msg[byte] = (msg[byte] | 1<<bit);
+			printf("\nRegistrando 0 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
 	}
 	send_message_to_leg(msg);
