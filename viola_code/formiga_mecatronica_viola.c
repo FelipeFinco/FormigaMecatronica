@@ -39,12 +39,12 @@ void send_message_to_leg(char msg[5])
 	}
 
 	#else
-	printf("\nA mensagem enviada para a MBED seria: %d", msg);
-	printf("\nNumero 1: %c", msg[0]);
-	printf("\nNumero 1: %c", msg[1]);
-	printf("\nNumero 1: %c", msg[2]);
-	printf("\nNumero 1: %c", msg[3]);
-	printf("\nNumero 1: %c", msg[4]);
+	printf("\nA mensagem enviada para a MBED seria: %s", msg);
+	printf("\nNumero 0: %c,%d", msg[0]);
+	printf("\nNumero 1: %c,%d", msg[1]);
+	printf("\nNumero 2: %c,%d", msg[2]);
+	printf("\nNumero 3: %c,%d", msg[3]);
+	printf("\nNumero 4: %c,%d", msg[4]);
 	#endif
 }
 
@@ -55,7 +55,7 @@ void send_message_to_leg(char msg[5])
 //As each char only have 8 bits and we need 6*2=12 bits, we will use 2 of the 5 chars to send the message.
 void send_movement(int movement_number)
 {
-	char msg[5] = "00000";
+	int msg[5] = {0,0,0,0,0};
 	
 	for (int leg = 0; leg < NUMBER_OF_LEGS; leg++)
 	{
@@ -69,7 +69,7 @@ void send_movement(int movement_number)
 		}
 		else
 		{
-			msg[byte] = (msg[byte] | (0<<bit&0xFF));
+			msg[byte] = (msg[byte] | 0<<bit);
 		}
 
 		bit++;
@@ -78,12 +78,12 @@ void send_movement(int movement_number)
 
 		if(movement_number == 0)
 		{
-			msg[byte] = (msg[byte] | (0<<bit&0xFF));
+			msg[byte] = (msg[byte] | 0<<bit);
 		}
 
 		else if(movement_number == 1)
 		{
-			msg[byte] = (msg[byte] | (1<<bit&0xFF));
+			msg[byte] = (msg[byte] | 1<<bit);
 		}
 	}
 	send_message_to_leg(msg);
