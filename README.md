@@ -42,7 +42,7 @@ Para essa implementação, portanto, foi utilizada a placa Colibri VF50, um comp
      
 Esse computador está embarcado em uma placa de suporte chamada Viola Carrier Board, uma single-board computer (SBC) de 74x74mm, que apresenta suporte a diferentes interfaces utilizadas no mercado, sendo importante para a comunicação CAN que será utilizada no projeto.
 
-<img src="./img/viola-carrier-board-top-view.png" align="center"
+<img src="./img/viola-carrier-board-top-view.jpg" align="center"
      alt="Figura 4" height="200">
      
 # Conclusão/Resultados
