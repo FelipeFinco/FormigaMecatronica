@@ -68,7 +68,7 @@ void send_movement(int movement_number)
 	for (int leg = 0; leg < NUMBER_OF_LEGS; leg++)
 	{
 		int bit = leg * 2; //first bit's location
-		int byte = floor(bit / 8); //in which byte it must be written on
+		int byte = int(floor(double(bit / 8))); //in which byte it must be written on
 		bit = bit - byte * 8;
 		//setting leg phase
 		if(leg % 2 == 0)
@@ -83,7 +83,7 @@ void send_movement(int movement_number)
 		}
 
 		bit++;
-		byte = bit % 8;
+		byte = int(floor(double(bit / 8)));
 		bit = bit - byte * 8;
 
 		if(movement_number == 0)
