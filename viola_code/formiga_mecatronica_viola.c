@@ -47,27 +47,28 @@ void send_movement(int movement_number)
 		}
 		else
 		{
-			msg[byte] = msg[byte] | 0<<bit&0xFF;
+			msg[byte] = (msg[byte] | (0<<bit&0xFF));
 		}
 
-		bit = bit++;
+		bit++;
 		byte = bit % 8;
 		bit = bit - byte * 8;
 
 		if(movement_number == 0)
 		{
-			msg[byte] = msg[byte] | 0<<bit&0xFF;
+			msg[byte] = (msg[byte] | (0<<bit&0xFF));
 		}
 
 		else if(movement_number == 1)
 		{
-			msg[byte] = msg[byte] | 1<<bit&0xFF;
+			msg[byte] = (msg[byte] | (1<<bit&0xFF));
 		}
 	}
+	send_message_to_leg(msg);
 }
 
 
-send_message_to_leg(char msg[5])
+void send_message_to_leg(char msg[5])
 {
 	#ifdef SEND_BY_CAN
 	sprintf(frame.data, msg);
@@ -93,10 +94,7 @@ int main(int argc, char **argv)
 {
 	char response[32];
 	//start robot waiting to send command
-	state =  SENDING_COMMAND;	
-
-	//indicates that the robot will locomove forward
-	int forward = 1;
+	state =  SENDING_COMMAND;
 
 	clock_t t_wait = clock();
 	
