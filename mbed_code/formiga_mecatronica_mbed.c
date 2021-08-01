@@ -24,17 +24,17 @@ double map(double x, double in_min, double in_max, double out_min, double out_ma
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-int horizontal_movement(double completion)
+int horizontal_movement(double progress)
 {
-    double angle = map(completion, 0, 100, 0, 2*3.14159);
+    double angle = map(progress, 0, 100, 0, 2*3.14159);
     double sine_result = -cos(angle);
     double result = map(sine_result, -1, 1, MOT_PWM_BACK, MOT_PWM_FRONT);
     return (int) result;
 }
 
-int vertical_movement(double completion)
+int vertical_movement(double progress)
 {
-    double angle = map(completion, 0, 100, 0, 2*3.14159);
+    double angle = map(progress, 0, 100, 0, 2*3.14159);
     double cossine_result = sin(angle);
     if(cossine_result < 0)
     {
@@ -46,13 +46,15 @@ int vertical_movement(double completion)
  
 int main() {
     clock_t t_system = clock();
+    clock_t t_system_old = clock();
 
     printf("main()\n");
     CANMessage msg;
     state = WAITING_COMMAND;
 
     while(1) {
-        if
+        t_system = clock();
+        if ()
         switch(state) {
 			case WAITING_COMMAND:
 				printf("loop()\n");
