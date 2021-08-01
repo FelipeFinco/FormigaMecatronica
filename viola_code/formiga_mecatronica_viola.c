@@ -27,13 +27,35 @@ struct can_frame frame;
 #endif
 
 
+
+
+void send_message_to_leg(char msg[5])
+{
+	#ifdef SEND_BY_CAN
+	sprintf(frame.data, msg);
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("Write");
+		return 1;
+	}
+
+	#else
+	printf("\nA mensagem enviada para a MBED seria: %d", msg);
+	printf("\nNumero 1: %c", msg[0]);
+	printf("\nNumero 1: %c", msg[1]);
+	printf("\nNumero 1: %c", msg[2]);
+	printf("\nNumero 1: %c", msg[3]);
+	printf("\nNumero 1: %c", msg[4]);
+	#endif
+}
+
+
 //This function decides what each leg has to do so the robot does the movement requested
 //for now, only having forward and backward movements, it only sends 0 (backward) and 1 (forward) for
 //all legs, odd legs will be 180° phase of the even legs, sending 0 (0° phase) and 1 (180° phase).
 //As each char only have 8 bits and we need 6*2=12 bits, we will use 2 of the 5 chars to send the message.
 void send_movement(int movement_number)
 {
-	char msg[5] = {'\0'};
+	char msg[5] = "00000";
 	
 	for (int leg = 0; leg < NUMBER_OF_LEGS; leg++)
 	{
@@ -65,21 +87,6 @@ void send_movement(int movement_number)
 		}
 	}
 	send_message_to_leg(msg);
-}
-
-
-void send_message_to_leg(char msg[5])
-{
-	#ifdef SEND_BY_CAN
-	sprintf(frame.data, msg);
-	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-		perror("Write");
-		return 1;
-	}
-
-	#else
-	printf("\nA mensagem enviada para a MBED seria: %s", msg);
-	#endif
 }
 
 //Different state of Toradex controller
