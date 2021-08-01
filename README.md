@@ -29,7 +29,20 @@ Tendo em vista a proposta do protótipo o movimento de formigas foi observado af
      alt="Figura 1" height="200">
 
 Além disso, pode-se visualizar a diferença entre os movimentos horizontal e vertical no gráfico abaixo, considerando que em cada intervalo de 90° há uma descrição do movimento de uma pata, considerando que uma está em fase com a outra.
+
 <img src="./img/movimentos.png" align="center"
-     alt="Figura 1" height="200">
-Com essa lógica foi possível utilizar um input do usuário para a toradex e assim mandar apenas duas informações por motor para cada MBED 
+     alt="Figura 2" height="200">
+     
+Com essa lógica foi possível utilizar um input do usuário para a toradex e assim mandar apenas duas informações por motor para cada MBED.
+
+Para essa implementação, portanto, foi utilizada a placa Colibri VF50, um computador em módulo com CPU Cortex A5 de limite de processamento de 400MHz, que se destaca principalmente pelo seu custo benefício, por ter diversas capabilidades que possibilitam uma ampla gama de aplicações, incluindo equipamentos de IHM e dispositivos industriais, equipamentos de segurança, infraestrutura e manufatura, aplicações de conversão de energia como drivers e inversores de frequência, dispositivos robustos de conectividade e sistemas operados por bateria como robôs e veículos industriais.
+
+<img src="./img/colibri-vf50-front-view.png" align="center"
+     alt="Figura 3" height="200">
+     
+Esse computador está embarcado em uma placa de suporte chamada Viola Carrier Board, uma single-board computer (SBC) de 74x74mm, que apresenta suporte a diferentes interfaces utilizadas no mercado, sendo importante para a comunicação CAN que será utilizada no projeto.
+
+<img src="./img/viola-carrier-board-top-view.png" align="center"
+     alt="Figura 4" height="200">
+     
 # Conclusão/Resultados
