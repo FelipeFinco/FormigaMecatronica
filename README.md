@@ -16,25 +16,27 @@ Projeto final da matéria Sistemas Embarcados do primeiro semestre de 2021. Mat�
 
  Dentro da robótica, robôs hexapodes possuem uma ampla gama de utilização devido a sua habilidade de locomoção em terrenos acidentados, sendo utilizados principalmente em meios agrícolas, sendo empregado até mesmo em meios espaciais.
 
- Este trabalho consiste na implementação da lógica de movimentação do robô em um sistema de hardware já existente, o qual consiste em uma placa da Toradex (Colibri VF50 embarcada na Viola Carrier Board) que possui grande robustez, escalabilidade e compatibilidade com o Linux e duas MBEDs (com controlador LPC1768) para complementação devido seus recursos open source e modularização. A partir da saída PWM é possível controlar os 12 servo motores (2 servos por perna). Assim, pretende-se ao final do trabalho criar a lógica de movimento do robô na Toradex, esta enviando comandos para ambas MBEDs que por sua vez devem estar aptas a interpretar esse comando e comandar os seus respectivos motores.
+ Este trabalho consiste na implementação da lógica de movimentação do robô em um sistema de hardware já existente, o qual consiste em uma placa da Toradex (Colibri VF50 embarcada na Viola Carrier Board) que possui grande robustez, escalabilidade e compatibilidade com o Linux e duas MBEDs (com controlador LPC1768) para complementação devido seus recursos open source e modularização. A partir da saída PWM é possível controlar os 12 servo motores (2 servos por perna). Assim, pretende-se ao final do trabalho criar a lógica de movimento do robô na Toradex, esta envia comandos para ambas MBEDs que, por sua vez, devem estar aptas a interpretar esse comando e comandar os seus respectivos motores.
  
-# Proposta/objetivo
+# Proposta
  Sabendo-se o contexto do projeto, devemos fechar seu escopo qual será a abordagem para os problemas expostos. Como imagina-se que o robô hexapode, aqui chamado de "formiga robótica", terá outras funcionalidades, pensaremos a estruturação do robô para que tanto o código, quanto o protocolo de comunicação seja versátil a adaptações e aprimoramentos.
 
- Assim buscamos fazer um software bem estruturado e comentado em inglês pensando que no futuro outras pessoas poderiam acessá-lo. Para abordar os protocolos de comunicação, usa-se PWM para informar as posições dos servos como padrão e escolhemos o protocolo CAN para realizar a comunicação entre os processadores. Este protocolo foi selecionado apesar de não ser tão facilmente implementável pois é um protocolo que possui uma robustez muito grande, além de ser determinístico e permitir que eventualmente outros dispositivos sejam "pendurados" na mesma rede. Como imagina-se o uso desse protocolo para outros sistemas, buscamos fazer a comunicação o mais eficiente possível e não necessáriamente da forma mais simples.
+ Assim buscamos fazer um software bem estruturado e comentado em inglês pensando que no futuro outras pessoas poderiam acessá-lo. Para abordar os protocolos de comunicação, usa-se PWM para informar as posições dos servos como padrão e escolhemos o protocolo CAN para realizar a comunicação entre os processadores. Este protocolo foi selecionado apesar de não ser tão facilmente implementável pois é um protocolo que possui uma robustez muito grande, além de ser determinístico e permitir que eventualmente outros dispositivos sejam "pendurados" na mesma rede. Como imagina-se o uso desse protocolo para outros sistemas, buscamos fazer a comunicação o mais eficiente possível e não necessariamente da forma mais simples.
 
- Para tal, buscou-se caracterizar o movimento dos motores pelo menor número de variaveis através da integração do movimento das pernas, uma vez que imagina-se, para movimentos simples, o motor vertical e horizontal da mesma perna atrelados entre si, dá para reduzir o número de graus de liberdade. Toda esta lógica de movimentação foi feita na Toradex para que poucas mensagens fossem passadas para a MBED, sendo cargo desta processá-las e criar por conta o sinal de movimentação do motor. 
+ Para tal, buscou-se caracterizar o movimento dos motores pelo menor número de variáveis através da integração do movimento das pernas, uma vez que se imagina, para movimentos simples, o motor vertical e horizontal da mesma perna atrelados entre si, dá para reduzir o número de graus de liberdade. Toda esta lógica de movimentação foi feita na Toradex para que poucas mensagens fossem passadas para a MBED, sendo cargo desta processá-las e criar por conta o sinal de movimentação do motor. 
+
+ # Entendendo o Sistema
 
 # Desenvolvimento
-## Desenvolvimento da lógica
-Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares. Logo podemos descrever o movimento de cada perna pela suas componentes longitudinais e verticais, para diminuir o número de mensagens na comunicação uma função integradora entre os movimentos das pernas foi criada possbilitando que os variaveis verticais e horizontais do movimento fossem substituidas apenas pela grandeza de fase do gráfico, diminuindo pela metade o número de variáveis como mostra o gráfico 1. Além disto as tarefas de processamento da MBED foram reduzidas uma vez que três pernas executarão mesmo movimento
+## Desenvolvimento da Lógica
+Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares. Logo podemos descrever o movimento de cada perna pelas suas componentes longitudinais e verticais, para diminuir o número de mensagens na comunicação uma função integradora entre os movimentos das pernas foi criada possibilitando que os variáveis verticais e horizontais do movimento fossem substituídas apenas pela grandeza de fase do gráfico, diminuindo pela metade o número de variáveis como mostra o gráfico 1. Além disto as tarefas de processamento da MBED foram reduzidas uma vez que três pernas executarão mesmo movimento
 <img src="./img/numeros_pernas.png" align="center"
      alt="Figura 1" height="200">
 
 <img src="./img/movimentos.png" align="center"
      alt="Figura 2" height="200">
   
-Tendo em vista tal lógica de movimentação, havia a possibilidade de executar todo o processamento apenas na MBED, deixando a placa Toradex apenas para recebimento de input do usuário, porém este método se torna desvantajoso pois sobrecarrega a rede de comunicação não permitindo implementações futuras além de facilitar ocorrência de erros e dificultar o debug. Portanto, escolheu-se executar a logica de movimentação toda na toradex enviando apenas duas mensagens (Fase e sentido) para a MBED, a qual processará tais informações afim de criar o PWM do motor como mostra o diagrama abaixo.
+Tendo em vista tal lógica de movimentação, havia a possibilidade de executar todo o processamento apenas na MBED, deixando a placa Toradex apenas para recebimento de input do usuário, porém este método se torna desvantajoso pois sobrecarrega a rede de comunicação não permitindo implementações futuras além de facilitar ocorrência de erros e dificultar o debug. Portanto, escolheu-se executar a lógica de movimentação toda na Toradex enviando apenas duas mensagens (Fase e sentido) para a MBED, a qual processará tais informações afim de criar o PWM do motor como mostra o diagrama abaixo.
 
 <img src="./img/Diagrama.jpg" align="center"
      alt="Figura 3" height="200">
@@ -70,9 +72,9 @@ Na Toradex, temos 3 estados: "SENDING_COMMAND", "WAITING_MOVEMENT", "EXIT", que 
 <img src="./img/Mbed States diagrams (1).png" align="center"
      alt="Figura 4" height="200">   
 
-## Desenvolvimento do código
-## Desenvolvimento da comunicação
+## Desenvolvimento do Código
+## Desenvolvimento da Comunicação
 
-# Conclusão/Resultados
+# Conclusão
 
 
