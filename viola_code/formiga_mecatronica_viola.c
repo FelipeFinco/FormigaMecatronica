@@ -48,11 +48,11 @@ void send_message_to_leg(int msg_int[5])
 
 	#else
 	printf("\nA mensagem enviada para a MBED seria: %s", msg);
-	printf("\nNumero 0: %c,%d", msg[0], msg[0]);
-	printf("\nNumero 1: %c,%d", msg[1], msg[1]);
-	printf("\nNumero 2: %c,%d", msg[2], msg[2]);
-	printf("\nNumero 3: %c,%d", msg[3], msg[3]);
-	printf("\nNumero 4: %c,%d", msg[4], msg[4]);
+	printf("\nNumero 0: %x,%d", msg[0], msg[0]);
+	printf("\nNumero 1: %x,%d", msg[1], msg[1]);
+	printf("\nNumero 2: %x,%d", msg[2], msg[2]);
+	printf("\nNumero 3: %x,%d", msg[3], msg[3]);
+	printf("\nNumero 4: %x,%d", msg[4], msg[4]);
 	#endif
 }
 
@@ -68,7 +68,7 @@ void send_movement(int movement_number)
 	for (int leg = 0; leg < NUMBER_OF_LEGS; leg++)
 	{
 		int bit = leg * 2; //first bit's location
-		int byte = int(floor(double(bit / 8))); //in which byte it must be written on
+		int byte = (int)(floor((double)(bit / 8))); //in which byte it must be written on
 		bit = bit - byte * 8;
 		//setting leg phase
 		if(leg % 2 == 0)
@@ -81,21 +81,21 @@ void send_movement(int movement_number)
 			msg[byte] = (msg[byte] | 0<<bit);
 			printf("\nRegistrando 0 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
-
+		bit = leg * 2;
 		bit++;
-		byte = int(floor(double(bit / 8)));
+		byte = (int)(floor((double)(bit / 8)));
 		bit = bit - byte * 8;
 
 		if(movement_number == 0)
 		{
 			msg[byte] = (msg[byte] | 0<<bit);
-			printf("\nRegistrando 1 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
+			printf("\nRegistrando 0 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
 
 		else if(movement_number == 1)
 		{
 			msg[byte] = (msg[byte] | 1<<bit);
-			printf("\nRegistrando 0 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
+			printf("\nRegistrando 1 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
 	}
 	send_message_to_leg(msg);
