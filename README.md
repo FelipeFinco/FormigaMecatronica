@@ -64,7 +64,7 @@ Na Toradex, temos 3 estados: "SENDING_COMMAND", "WAITING_MOVEMENT", "EXIT", que 
 
  Na MBED, mais simples, temos dois estados: "WAITING_COMMAND", "SENDING_MOVEMENT"   
      
-<img src="./img/Mbed States diagrams.png" align="center"
+<img src="./img/Mbed States diagrams(1).png" align="center"
      alt="Figura 4" height="200">   
      
 
