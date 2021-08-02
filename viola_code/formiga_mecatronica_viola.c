@@ -17,7 +17,7 @@ const int period_of_full_movement = 3;  //period of each movement of the robot i
 
 
 //if you want the code to send messages by CAN
-//#define SEND_BY_CAN;  
+//#define SEND_BY_CAN 1  
 
 
 #ifdef SEND_BY_CAN
@@ -32,12 +32,11 @@ struct can_frame frame;
 
 void send_message_to_leg(int msg_int[5])
 {
-	char msg[6];
+	char msg[5];
 	for (size_t i = 0; i < 6; i++)
 	{
 		msg[i]=msg_int[i];
 	}
-	msg[6] = "\0";
 	
 	#ifdef SEND_BY_CAN
 	sprintf(frame.data, msg);
@@ -47,12 +46,7 @@ void send_message_to_leg(int msg_int[5])
 	}
 
 	#else
-	printf("\nA mensagem enviada para a MBED seria: %s", msg);
-	printf("\nNumero 0: %x,%d", msg[0], msg[0]);
-	printf("\nNumero 1: %x,%d", msg[1], msg[1]);
-	printf("\nNumero 2: %x,%d", msg[2], msg[2]);
-	printf("\nNumero 3: %x,%d", msg[3], msg[3]);
-	printf("\nNumero 4: %x,%d", msg[4], msg[4]);
+	printf("\nA mensagem enviada para a MBED seria: %x %x %x %x %x", msg[0], msg[1], msg[2], msg[3], msg[4]);
 	#endif
 }
 
@@ -65,9 +59,9 @@ void send_movement(int movement_number)
 {
 	int msg[5] = {0,0,0,0,0};
 	
-	for (int leg = 0; leg < NUMBER_OF_LEGS; leg++)
+	for (int leg = 1; leg <= NUMBER_OF_LEGS; leg++)
 	{
-		int bit = leg * 2; //first bit's location
+		int bit = (leg-1) * 2; //first bit's location
 		int byte = (int)(floor((double)(bit / 8))); //in which byte it must be written on
 		bit = bit - byte * 8;
 		//setting leg phase
@@ -81,7 +75,7 @@ void send_movement(int movement_number)
 			msg[byte] = (msg[byte] | 0<<bit);
 			printf("\nRegistrando 0 no bit %d do byte %d, valor:%d",bit, byte, msg[byte]);
 		}
-		bit = leg * 2;
+		bit = (leg-1) * 2;
 		bit++;
 		byte = (int)(floor((double)(bit / 8)));
 		bit = bit - byte * 8;
