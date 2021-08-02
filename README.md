@@ -32,7 +32,7 @@ Tendo em vista a proposta do protótipo o movimento de formigas foi observado af
      alt="Figura 2" height="200">
   
 Tendo em vista tal lógica de movimentação, havia a possibilidade de executar todo o processamento apenas na MBED, deixando a placa Toradex apenas para recebimento de input do usuário, porém este método se torna desvantajoso pois sobrecarrega a rede de comunicação não permitindo implementações futuras além de facilitar ocorrência de erros e dificultar o debug. Portanto, escolheu-se executar a logica de movimentação toda na toradex enviando apenas duas mensagens (Fase e sentido) para a MBED, a qual processará tais informações afim de criar o PWM do motor como mostra o diagrama abaixo.
-<img src="./img/Diagrama.png" align="center"
+<img src="./img/Diagrama.jpg" align="center"
      alt="Figura 3" height="200">
 
 Para essa implementação, portanto, foi utilizada a placa Colibri VF50, um computador em módulo com CPU Cortex A5 de limite de processamento de 400MHz, que se destaca principalmente pelo seu custo benefício, por ter diversas capabilidades que possibilitam uma ampla gama de aplicações, incluindo equipamentos de IHM e dispositivos industriais, equipamentos de segurança, infraestrutura e manufatura, aplicações de conversão de energia como drivers e inversores de frequência, dispositivos robustos de conectividade e sistemas operados por bateria como robôs e veículos industriais.
