@@ -17,7 +17,7 @@ const int period_of_full_movement = 3;  //period of each movement of the robot i
 
 
 //if you want the code to send messages by CAN
-//#define SEND_BY_CAN 1  
+#define SEND_BY_CAN 1  
 
 
 #ifdef SEND_BY_CAN

@@ -6,7 +6,7 @@
 //#define EVEN_LEGS_MBED  1              //This MBED will be used for the even legs of the robot
 
 //if you want the code to send messages by CAN
-//#define RECEIVE_BY_CAN 1
+#define RECEIVE_BY_CAN 1
 
 #ifdef RECEIVE_BY_CAN
 CANMessage msg;
@@ -53,7 +53,6 @@ enum states {
     SENDING_MOVEMENT
 } state;
 
-uint64_t clock_ms() { return us_ticker_read() / 1000; }
 
 double map(double x, double in_min, double in_max, double out_min, double out_max) 
 {
@@ -88,7 +87,7 @@ void set_servos()
         int bit = (leg-1) * 2; //first bit's location
         int byte = (int)(floor((double)(bit / 8))); //in which byte it must be written on
         bit = bit - byte * 8;
-        if((msg[byte] | 1<<bit) == 0)
+        if((msg.data[byte] | 1<<bit) == 0)
         {
             servos[i].phase = 0;
         }
@@ -99,7 +98,7 @@ void set_servos()
         bit = (leg-1) * 2;
         byte = (int)(floor((double)(bit / 8)));
         bit = bit - byte * 8;
-        if((msg[byte] | 1<<bit) == 0)
+        if((msg.data[byte] | 1<<bit) == 0)
         {
             servos[i].direction = 0;
         }
@@ -120,9 +119,13 @@ int receive_msg()
         return 1;
     }
     #else
-    scanf("%x %x %x %x %x", msg[0], msg[1], msg[2], msg[3], msg[4]);
+    int i;
+    scanf("%d",i);
     set_servos();
-    return 1;
+    if(i == 1)
+    {
+        return 1;
+    }
     #endif
     return 0;
 }
@@ -153,7 +156,6 @@ void move_legs(double progress)
 }
 
 int main() {
-    
 #ifdef ODD_LEGS_MBED
     for (size_t i = 0; i < 6; i++)
     {
@@ -188,18 +190,18 @@ int main() {
 #endif
     
     
-    int timer = clock_ms();
+    time_t seconds = time(NULL);
     double progress = 0;
     int movement_finished = 0;
 
     state = WAITING_COMMAND;
-
     while(1) {
-        if ((clock_ms()-timer) >= 1000/system_frequency)
+        if ((time(NULL)-seconds) >= 1/system_frequency)
         {
-            timer = clock_ms();
+            seconds = time(NULL);
             switch(state) {
                 case WAITING_COMMAND:
+                    printf("Waiting command");
                     if (receive_msg())
                     {
                         progress = 0;
@@ -208,6 +210,7 @@ int main() {
                     }
                     
                 case SENDING_MOVEMENT:
+                    printf("Sending movement");
                     if(movement_finished == 1)
                     {
                         state = WAITING_COMMAND;
@@ -226,4 +229,5 @@ int main() {
         }
         
     }
+    
 }
