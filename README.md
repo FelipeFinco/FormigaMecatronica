@@ -14,16 +14,19 @@ Projeto final da matéria Sistemas Embarcados do primeiro semestre de 2021. Mat�
 
 # Introdução
 
- Dentro da robótica robos hexapodes possuem uma ampla gama de utilização devido a facilidade de locomoção em terrenos acidentados, sendo utilizados principalmente em meios agricolas, mas até mesmo em espaciais.
+ Dentro da robótica, robôs hexapodes possuem uma ampla gama de utilização devido a sua habilidade de locomoção em terrenos acidentados, sendo utilizados principalmente em meios agrícolas, sendo empregado até mesmo em meios espaciais.
 
- Este trabalho consiste na implementação da lógica de movimentação do robô em um sistema de hardware já existente, o qual consiste em uma placa Toradex (com computador Colibri VF50) que possui grande robustez, escalabilidade e compatibilidade com o Linux, duas MBEDS (com controlador LPC1768) para complementação devido seus recursos open source e modularização, além dos 12 servo motores (2 por perna) do robô, caracterizando um sistema embarcado robusto. Assim, o trabalho passou pelas etapas de concepção da lógica de movimentação e integração dos motores, criação dos códigos, comunicação CAN entre as placas e implementação a distância do software no hardware descrito acima.
+ Este trabalho consiste na implementação da lógica de movimentação do robô em um sistema de hardware já existente, o qual consiste em uma placa da Toradex (Colibri VF50 embarcada na Viola Carrier Board) que possui grande robustez, escalabilidade e compatibilidade com o Linux e duas MBEDs (com controlador LPC1768) para complementação devido seus recursos open source e modularização. A partir da saída PWM é possível controlar os 12 servo motores (2 servos por perna). Assim, pretende-se ao final do trabalho criar a lógica de movimento do robô na Toradex, esta enviando comandos para ambas MBEDs que por sua vez devem estar aptas a interpretar esse comando e comandar os seus respectivos motores.
  
 # Proposta/objetivo
- De maneira geral, deseja-se que o robô hexapode, aqui chamado de "formiga robótica", possa se movimentar para frente e para trás utilizando-se o protocolo de comunicação CAN para comunicar entre os processadores. Foi utilizado este protocolo entre as placas devido a sua robustez, buscou-se ainda uma comunicação entre as placas visado diminuir o trafégo de informações e possibilitar implementações no futuro além de dividir a tarefa de processamento entre a MBED e a toradex.
+ Sabendo-se o contexto do projeto, devemos fechar seu escopo qual será a abordagem para os problemas expostos. Como imagina-se que o robô hexapode, aqui chamado de "formiga robótica", terá outras funcionalidades, pensaremos a estruturação do robô para que tanto o código, quanto o protocolo de comunicação seja versátil a adaptações e aprimoramentos.
 
- Para tal, buscou-se caracterizar o movimento dos motores pelo menor número de variaveis através da integração do movimento das pernas, uma vez que três pernas se moverão juntas enquanto outras três permanecerão em repouso. Toda esta lógica de movimentação foi feita na Toradex para que poucas mensagens fossem passadas para a MBED e assim esta conseguisse processá-las e criar o sinal de movimentação do motor. 
+ Assim buscamos fazer um software bem estruturado e comentado em inglês pensando que no futuro outras pessoas poderiam acessá-lo. Para abordar os protocolos de comunicação, usa-se PWM para informar as posições dos servos como padrão e escolhemos o protocolo CAN para realizar a comunicação entre os processadores. Este protocolo foi selecionado apesar de não ser tão facilmente implementável pois é um protocolo que possui uma robustez muito grande, além de ser determinístico e permitir que eventualmente outros dispositivos sejam "pendurados" na mesma rede. Como imagina-se o uso desse protocolo para outros sistemas, buscamos fazer a comunicação o mais eficiente possível e não necessáriamente da forma mais simples.
+
+ Para tal, buscou-se caracterizar o movimento dos motores pelo menor número de variaveis através da integração do movimento das pernas, uma vez que imagina-se, para movimentos simples, o motor vertical e horizontal da mesma perna atrelados entre si, dá para reduzir o número de graus de liberdade. Toda esta lógica de movimentação foi feita na Toradex para que poucas mensagens fossem passadas para a MBED, sendo cargo desta processá-las e criar por conta o sinal de movimentação do motor. 
 
 # Desenvolvimento
+## Desenvolvimento da lógica
 Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares. Logo podemos descrever o movimento de cada perna pela suas componentes longitudinais e verticais, para diminuir o número de mensagens na comunicação uma função integradora entre os movimentos das pernas foi criada possbilitando que os variaveis verticais e horizontais do movimento fossem substituidas apenas pela grandeza de fase do gráfico, diminuindo pela metade o número de variáveis como mostra o gráfico 1. Além disto as tarefas de processamento da MBED foram reduzidas uma vez que três pernas executarão mesmo movimento
 <img src="./img/numeros_pernas.png" align="center"
      alt="Figura 1" height="200">
@@ -66,7 +69,9 @@ Na Toradex, temos 3 estados: "SENDING_COMMAND", "WAITING_MOVEMENT", "EXIT", que 
      
 <img src="./img/Mbed States diagrams (1).png" align="center"
      alt="Figura 4" height="200">   
-     
+
+## Desenvolvimento do código
+## Desenvolvimento da comunicação
 
 # Conclusão/Resultados
 
