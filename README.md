@@ -32,6 +32,7 @@ Tendo em vista a proposta do protótipo o movimento de formigas foi observado af
      alt="Figura 2" height="200">
   
 Tendo em vista tal lógica de movimentação, havia a possibilidade de executar todo o processamento apenas na MBED, deixando a placa Toradex apenas para recebimento de input do usuário, porém este método se torna desvantajoso pois sobrecarrega a rede de comunicação não permitindo implementações futuras além de facilitar ocorrência de erros e dificultar o debug. Portanto, escolheu-se executar a logica de movimentação toda na toradex enviando apenas duas mensagens (Fase e sentido) para a MBED, a qual processará tais informações afim de criar o PWM do motor como mostra o diagrama abaixo.
+
 <img src="./img/Diagrama.jpg" align="center"
      alt="Figura 3" height="200">
 
