@@ -46,5 +46,28 @@ Esse computador está embarcado em uma placa de suporte chamada Viola Carrier Bo
 <img src="./img/viola-carrier-board-top-view.jpg" align="center"
      alt="Figura 4" height="200">
      
-Utilizou-se ainda do protocolo de comunicação CAN devido sua robustez, facilidade de se adaptar a condições de falha e facil debug
+Para enviar os sinais em PWM, foram usadas as MBED da LPC 1768, que pode ser vista abaixo.
+
+<img src="./img/mbed_LPC1768.jpg" align="center"
+     alt="Figura 4" height="200"> <img src="./img/lpc1768_pinout.png" align="center"
+     alt="Figura 4" height="200">    
+     
+Utilizou-se ainda do protocolo de comunicação CAN devido sua robustez, facilidade de se adaptar a condições de falha e fácil debugging.
+
+Nos dois códigos, para facilitar a comunicação entre os módulos, utilizou-se de uma máquina de estados para tornar mais clara a definição da comunicação entre a Toradex e a MBED. Os diagramas da Toradex e da MBED estão expostos abaixo. 
+
+Na Toradex, temos 3 estados: "SENDING_COMMAND", "WAITING_MOVEMENT", "EXIT", que são afetadas pela interação com o usuário, a comunicação com a MBED e o movimento da respectiva perna, havendo esse estado relativo à finalização do processo.  
+
+<img src="./img/States diagrams.png" align="center"
+     alt="Figura 4" height="200"> 
+     
+
+ Na MBED, mais simples, temos dois estados: "WAITING_COMMAND", "SENDING_MOVEMENT"   
+     
+<img src="./img/MBED States diagrams.png" align="center"
+     alt="Figura 4" height="200">   
+     
+
 # Conclusão/Resultados
+
+
