@@ -61,20 +61,26 @@ Tendo em vista tal lógica de movimentação, havia a possibilidade de executar 
      alt="Figura 3" height="200">
 
 
-Nos dois códigos, para facilitar a comunicação entre os módulos, utilizou-se de uma máquina de estados para tornar mais clara a definição da comunicação entre a Toradex e a MBED. Os diagramas da Toradex e da MBED estão expostos abaixo. 
 
-Na Toradex, temos 3 estados: "SENDING_COMMAND", "WAITING_MOVEMENT", "EXIT", que são afetadas pela interação com o usuário, a comunicação com a MBED e o movimento da respectiva perna, havendo esse estado relativo à finalização do processo.  
+Nos dois códigos, para facilitar a comunicação entre os módulos, utilizou-se de uma máquina de estados para visualizar mais claramente a definição da comunicação entre a Toradex e a MBED. Máquinas de estado são dispositivos que armazenam o status de um objeto em um tempo específico de acordo com a entrada que ele recebe. Um estado é uma combinação específica dentre várias possíveis para um objeto, que não descreve exatamente compo ele funciona, mas apenas a "posição" dele em um determinado momento.  Os diagramas da Toradex e da MBED estão expostos abaixo, explicando mais claramente quais estados cada dispositivo envolvido no processo de caminhada da Formiga pode assumir. 
+
+Para a Toradex, temos 3 estados: 
+-"SENDING_COMMAND", que é o estado inicial e recebe as orirentações do usuário a respeito da movimentação da formiga desejada e, tendo entendido a mensagem, transmite esse sinal  e encaminha o sistema para a finalização tendo sido já performado o movimento desejado;
+-"WAITING_MOVEMENT", que recebe o sinal de movimentação desejado e recebe o sinal de completude desse movimento;
+-"EXIT", que é o estado de finalização.
 
 <img src="./img/States diagrams.png" align="center"
      alt="Figura 4" height="200"> 
      
 
- Na MBED, mais simples, temos dois estados: "WAITING_COMMAND", "SENDING_MOVEMENT"   
+ Na MBED, mais simples, temos dois estados: "WAITING_COMMAND", que recebe o sinal da Toradex e "SENDING_MOVEMENT", que executa e sinaliza o fim do movimento.  
      
 <img src="./img/Mbed States diagrams (1).png" align="center"
      alt="Figura 4" height="200">   
 
 ## Desenvolvimento do Código
+
+
 ## Desenvolvimento da Comunicação
 
 # Conclusão
