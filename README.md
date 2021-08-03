@@ -40,10 +40,10 @@ Esse computador está embarcado em uma placa de suporte chamada Viola Carrier Bo
 Para enviar os sinais em PWM, foram usadas as MBED da LPC 1768, que pode ser vista abaixo.
 
 <img src="./img/mbed_LPC1768.jpg" align="center"
-     alt="Figura 4" height="200"> <img src="./img/lpc1768_pinout.png" align="center"
-     alt="Figura 4" height="200">    
+     alt="Figura 5" height="200"> <img src="./img/lpc1768_pinout.png" align="center"
+     alt="Figura 6" height="200">    
      
-Utilizou-se ainda do protocolo de comunicação CAN devido sua robustez, facilidade de se adaptar a condições de falha e fácil debugging.
+Como pode ser visto na imagem do pinout da placa, ela é desenvolvida para a prototipagem de diversos tipos de dispositivos, tendo múltiplas entradas e saídas, de acordo com a aplicação. Para este projeto, utilizamos portanto as portas de saída com sinal PWM e as de comunicação CAN. Esse protocolo foi utilizado por sua robustez, facilidade de se adaptar a condições de falha e fácil debugging.
 
 
 # Desenvolvimento
@@ -103,6 +103,8 @@ Com base no site https://developer.toradex.com/knowledge-base/build-u-boot-and-l
 
 <img src="./img/cannot find device.png" align="center"
      alt="Figura 8" height="75">  
+     
+Caso a mensagem seja recebida e enviada diretamente do terminal, tanto a Toradex quanto a MBED captam e conseguem traduzir a mensagem, e no caso da MBED, executar o comando devido. Esse erro detalhado acima aconteece, porém, quando há a tentativa de estabelecer comunicação direta entre as duas placas.  
      
  
      
