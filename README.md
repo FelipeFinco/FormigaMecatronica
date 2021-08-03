@@ -80,8 +80,33 @@ Para a Toradex, temos 3 estados:
 
 ## Desenvolvimento do Código
 
+Como proposto, o código foi pensado para ser estruturado para facilitar a leitura e modificação, por isso foi adotado uma máquina de estados para ambas plataformas como mencionado anteriormente. Essas máquinas de estados foram feitas utilizando-se de Switch Cases dos estados mencionados no tópico anterior.
+
+Além disso, o código foi sendo escrito comentando-se suas funções principais e onde poderia haver dúvidas para algum novo usuário que precisaria entendê-lo para aprimorar ou debugá-lo. No desenvolvimento do código foi utilizado bastante de printf() para entender seu funcionamento como ferramenta de debug.
+
+A ferramenta de diretiva foi muito utilizada, pois, como havia bastante dificuldade na implementação da rede CAN e precisava-se testar o código, definiu-se (ou não) uma variável chamada “SEND_BY_CAN”. No código da Toradex, quando essa variável estava definida fazia com que a escrita da mensagem da mensagem fosse feito por um socket CAN, e quando não estava definida, a mensagem era então printada na tela. Já no código da MBED, a definição dessa mesma variável fazia com que o código esperasse o recebimento da mensagem por CAN, ou, quando não definida, esperava o recebimento por scanf. Além disso, outra diretiva importante usada foi a para dizer para qual das duas MBEDs estava sendo compilado o código, bastando definir a variável “ODD_LEGS_MBED” caso a MBED seria a que controla as pernas 1, 3 e 5 ou “EVEN_LEGS_MBED” caso fosse a MBED que controla os motores 2, 4 e 6.
+
+Um desafio do código foi conseguir construir a mensagem de comunicação entre os sistemas de forma eficiente. Para que isso fosse possível, foi reduzido o número de variáveis, como explicado no capítulo anterior e também precisou-se comprimir os bits de informação para que fosse enviado junto com a string da mensagem da CAN, como será melhor explicado no próximo capítulo. Para fazer essa manipulação de caracteres, foi preciso fazer operações “bitwise” e entender cada caractere como 8 bits para enviar as mensagens.
+
+O processo de desenvolvimento do código foi feito no computador dos integrantes do grupo de forma remota utilizando o Visual Studio Code. Acessomos o computador do laboratório através do AnyDesk e utilizamos este repositório para acessar os códigos feitos no computador pessoal e poder testá-los nas placas. O próprio processo de build, importação do binário na placa e boot do programa não é algo simples para novos usuários e por isso criamos o .txt deste repositório chamado “compilando_e_enviando”. Nele explica como realizar o processo de cross compile no Linux do programa da Toradex (explica depois da primeira vez que já colocamos para funcionar) e enviar o binário para a VF50. Além disso, explica a buildar o programa na IDE online da MBED e passar o arquivo binário para a MBED e reiniciá-la utilizando o GTKTerm.
 
 ## Desenvolvimento da Comunicação
+
+Para a comunicação, como exposto, utilizamos o protocolo CAN. O pacote de dados enviado na mensagem consistia basicamente em uma palavra de cinco caracteres. Cada caractere era um byte, sendo portanto uma palavra um número composto de 40 bits. Essas palavras eram geradas no código que estava na Toradex, a mensagem era transmitida para a MBED e então traduzida e executada, de modo que, para a perna efetuar uma ação, ela precisa basicamente de duas informações, isto é, a fase (0° ou 180°) e o sentido (para frente ou para trás). Sendo assim, para as seis pernas, são necessários pelo menos 12 bits dentre os 40 que são transmitidos a cada instante, como pode ser visto na imagem.
+
+<img src="./img/Can Communication.png" align="center"
+     alt="Figura 7" height="200">  
+
+Dessa forma, idealmente, ao receber e traduzir a mensagem, a MBED receberia o comando feito pelo usuário e executaria o movimento desejado. 
+
+Com base no site https://developer.toradex.com/knowledge-base/build-u-boot-and-linux-kernel-from-source-code#tab-colibri-vfxx,  para ter acesso à porta CAN da placa, foi necessário acessar e reprogramar a device tree, reconstruindo-a com a tool chain apropriada, enviando essa nova device tree para a Toradex utilizando um cartão SD e bootando ela em modo de configuração, recompilando o Kernel. Quando a comunicação ia ser executada, porém, o sistema apresentava um erro em que aparecia que a porta desejada não pôde ser encontrada no dispositivo.  
+
+<img src="./img/cannot find device.png" align="center"
+     alt="Figura 8" height="200">  
+     
+ 
+     
+
 
 # Conclusão
 
