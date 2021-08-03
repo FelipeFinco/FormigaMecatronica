@@ -26,22 +26,8 @@ Projeto final da matéria Sistemas Embarcados do primeiro semestre de 2021. Mat�
  Para tal, buscou-se caracterizar o movimento dos motores pelo menor número de variáveis através da integração do movimento das pernas, uma vez que se imagina, para movimentos simples, o motor vertical e horizontal da mesma perna atrelados entre si, dá para reduzir o número de graus de liberdade. Toda esta lógica de movimentação foi feita na Toradex para que poucas mensagens fossem passadas para a MBED, sendo cargo desta processá-las e criar por conta o sinal de movimentação do motor. 
 
  # Entendendo o Sistema
-
-# Desenvolvimento
-## Desenvolvimento da Lógica
-Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares. Logo podemos descrever o movimento de cada perna pelas suas componentes longitudinais e verticais, para diminuir o número de mensagens na comunicação uma função integradora entre os movimentos das pernas foi criada possibilitando que os variáveis verticais e horizontais do movimento fossem substituídas apenas pela grandeza de fase do gráfico, diminuindo pela metade o número de variáveis como mostra o gráfico 1. Além disto as tarefas de processamento da MBED foram reduzidas uma vez que três pernas executarão mesmo movimento
-<img src="./img/numeros_pernas.png" align="center"
-     alt="Figura 1" height="200">
-
-<img src="./img/movimentos.png" align="center"
-     alt="Figura 2" height="200">
-  
-Tendo em vista tal lógica de movimentação, havia a possibilidade de executar todo o processamento apenas na MBED, deixando a placa Toradex apenas para recebimento de input do usuário, porém este método se torna desvantajoso pois sobrecarrega a rede de comunicação não permitindo implementações futuras além de facilitar ocorrência de erros e dificultar o debug. Portanto, escolheu-se executar a lógica de movimentação toda na Toradex enviando apenas duas mensagens (Fase e sentido) para a MBED, a qual processará tais informações afim de criar o PWM do motor como mostra o diagrama abaixo.
-
-<img src="./img/Diagrama.jpg" align="center"
-     alt="Figura 3" height="200">
-
-Para essa implementação, portanto, foi utilizada a placa Colibri VF50, um computador em módulo com CPU Cortex A5 de limite de processamento de 400MHz, que se destaca principalmente pelo seu custo benefício, por ter diversas capabilidades que possibilitam uma ampla gama de aplicações, incluindo equipamentos de IHM e dispositivos industriais, equipamentos de segurança, infraestrutura e manufatura, aplicações de conversão de energia como drivers e inversores de frequência, dispositivos robustos de conectividade e sistemas operados por bateria como robôs e veículos industriais.
+ 
+ Para essa implementação, portanto, foi utilizada a placa Colibri VF50, um computador em módulo com CPU Cortex A5 de limite de processamento de 400MHz, que se destaca principalmente pelo seu custo benefício, por ter diversas capabilidades que possibilitam uma ampla gama de aplicações, incluindo equipamentos de IHM e dispositivos industriais, equipamentos de segurança, infraestrutura e manufatura, aplicações de conversão de energia como drivers e inversores de frequência, dispositivos robustos de conectividade e sistemas operados por bateria como robôs e veículos industriais.
 
 <img src="./img/colibri-vf50-front-view.png" align="center"
      alt="Figura 3" height="200">
@@ -58,6 +44,22 @@ Para enviar os sinais em PWM, foram usadas as MBED da LPC 1768, que pode ser vis
      alt="Figura 4" height="200">    
      
 Utilizou-se ainda do protocolo de comunicação CAN devido sua robustez, facilidade de se adaptar a condições de falha e fácil debugging.
+
+
+# Desenvolvimento
+## Desenvolvimento da Lógica
+Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares. Logo podemos descrever o movimento de cada perna pelas suas componentes longitudinais e verticais, para diminuir o número de mensagens na comunicação uma função integradora entre os movimentos das pernas foi criada possibilitando que os variáveis verticais e horizontais do movimento fossem substituídas apenas pela grandeza de fase do gráfico, diminuindo pela metade o número de variáveis como mostra o gráfico 1. Além disto as tarefas de processamento da MBED foram reduzidas uma vez que três pernas executarão mesmo movimento
+<img src="./img/numeros_pernas.png" align="center"
+     alt="Figura 1" height="200">
+
+<img src="./img/movimentos.png" align="center"
+     alt="Figura 2" height="200">
+  
+Tendo em vista tal lógica de movimentação, havia a possibilidade de executar todo o processamento apenas na MBED, deixando a placa Toradex apenas para recebimento de input do usuário, porém este método se torna desvantajoso pois sobrecarrega a rede de comunicação não permitindo implementações futuras além de facilitar ocorrência de erros e dificultar o debug. Portanto, escolheu-se executar a lógica de movimentação toda na Toradex enviando apenas duas mensagens (Fase e sentido) para a MBED, a qual processará tais informações afim de criar o PWM do motor como mostra o diagrama abaixo.
+
+<img src="./img/Diagrama.jpg" align="center"
+     alt="Figura 3" height="200">
+
 
 Nos dois códigos, para facilitar a comunicação entre os módulos, utilizou-se de uma máquina de estados para tornar mais clara a definição da comunicação entre a Toradex e a MBED. Os diagramas da Toradex e da MBED estão expostos abaixo. 
 
