@@ -102,7 +102,7 @@ Dessa forma, idealmente, ao receber e traduzir a mensagem, a MBED receberia o co
 Com base no site https://developer.toradex.com/knowledge-base/build-u-boot-and-linux-kernel-from-source-code#tab-colibri-vfxx,  para ter acesso à porta CAN da placa, foi necessário acessar e reprogramar a device tree, reconstruindo-a com a tool chain apropriada, enviando essa nova device tree para a Toradex utilizando um cartão SD e bootando ela em modo de configuração, recompilando o Kernel. Quando a comunicação ia ser executada, porém, o sistema apresentava um erro em que aparecia que a porta desejada não pôde ser encontrada no dispositivo.  
 
 <img src="./img/cannot find device.png" align="center"
-     alt="Figura 8" height="200">  
+     alt="Figura 8" height="75">  
      
  
      
