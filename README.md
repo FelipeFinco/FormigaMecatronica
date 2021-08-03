@@ -27,7 +27,7 @@ Projeto final da matéria Sistemas Embarcados do primeiro semestre de 2021. Mat�
 
  # Entendendo o Sistema
  
- Para essa implementação, portanto, foi utilizada a placa Colibri VF50, um computador em módulo com CPU Cortex A5 de limite de processamento de 400MHz, que se destaca principalmente pelo seu custo benefício, por ter diversas capabilidades que possibilitam uma ampla gama de aplicações, incluindo equipamentos de IHM e dispositivos industriais, equipamentos de segurança, infraestrutura e manufatura, aplicações de conversão de energia como drivers e inversores de frequência, dispositivos robustos de conectividade e sistemas operados por bateria como robôs e veículos industriais.
+ Para essa implementação, foi utilizada a placa Colibri VF50, um computador em módulo com CPU Cortex A5 de limite de processamento de 400MHz, que se destaca principalmente pelo seu custo benefício, por ter diversas capabilidades que possibilitam uma ampla gama de aplicações, incluindo equipamentos de IHM e dispositivos industriais, equipamentos de segurança, infraestrutura e manufatura, aplicações de conversão de energia como drivers e inversores de frequência, dispositivos robustos de conectividade e sistemas operados por bateria como robôs e veículos industriais.
 
 <img src="./img/colibri-vf50-front-view.png" align="center"
      alt="Figura 3" height="200">
@@ -48,21 +48,21 @@ Como pode ser visto na imagem do pinout da placa, ela é desenvolvida para a pro
 
 # Desenvolvimento
 ## Desenvolvimento da Lógica
-Tendo em vista a proposta do protótipo o movimento de formigas foi observado afim de formular uma lei de integração entre as pernas. Notou-se que as formigas executam simultaneamente movimentos rotacionais de subida e descida nas patas 1, 3 e 5 de forma a manter um plano de apoio no chão com as patas 2, 4 e 6 (Figura 1) a partir do momento em que as patas impares tocam o chão, o movimento se da nas patas pares. Logo podemos descrever o movimento de cada perna pelas suas componentes longitudinais e verticais, para diminuir o número de mensagens na comunicação uma função integradora entre os movimentos das pernas foi criada possibilitando que os variáveis verticais e horizontais do movimento fossem substituídas apenas pela grandeza de fase do gráfico, diminuindo pela metade o número de variáveis como mostra o gráfico 1. Além disto as tarefas de processamento da MBED foram reduzidas uma vez que três pernas executarão mesmo movimento
+Tendo em vista a proposta do protótipo o movimento de formigas foi observado a fim de formular uma lei de integração entre as pernas. Os movimentos das patas fora pensados para serem semi-circulares e em 180° de fase entre as patas ímpares em relação às pares. Assim, em um movimento para frente por exemplo, enquantos as patas pares vão estar levantando e se movendo para frente, as ímpares vão estar em contato com o soloe empurrando o chão para trás. Se descrevermos esse movimento de cada perna pelas suas componentes longitudinais e verticais, vai resultar no gráfico a seguir, sendo que movimento para frente da formiga é representado seta pra direita azul e movimentos para trás são representados pela seta para a esquerda vermelha. Assim, o movimento dos dois serovos da perna são realizados por apenas uma variável, diminuindo assim o tamanho da mensagem que precisa ser enviada (precisando ser enviadas 6 mensagens e não 12).
 <img src="./img/numeros_pernas.png" align="center"
      alt="Figura 1" height="200">
 
 <img src="./img/movimentos.png" align="center"
      alt="Figura 2" height="200">
   
-Tendo em vista tal lógica de movimentação, havia a possibilidade de executar todo o processamento apenas na MBED, deixando a placa Toradex apenas para recebimento de input do usuário, porém este método se torna desvantajoso pois sobrecarrega a rede de comunicação não permitindo implementações futuras além de facilitar ocorrência de erros e dificultar o debug. Portanto, escolheu-se executar a lógica de movimentação toda na Toradex enviando apenas duas mensagens (Fase e sentido) para a MBED, a qual processará tais informações afim de criar o PWM do motor como mostra o diagrama abaixo.
+É interessante, na visão de sistema, que toda a decisão de trajetória seja feita por um sistema apenas, que no caso seria a Toradex, pois isso além de garantir a sincronização dos movimentos, facilita desenvolvimentos futuros em que o calculo de trajetória pode estar associada à leitura de sensores e todos os sinais deveriam ser enviados para as duas MBEDs. Assim, a Toradex recebe o movimento desejado pelo usuário, o que permite decidir qual movimento cada perna do robô deve executar para realizar esse movimento e então ela envia para as MBEDs qual fase e qual sentido deve ir cada perna para realizar o movimento. Assim, a MBED, depois de receber a mensagem da Toradex, começa a desenvolver o movimento sozinha das suas pernas até acabar um ciclo completo do movimento.
 
 <img src="./img/Diagrama.jpg" align="center"
      alt="Figura 3" height="200">
 
 
 
-Nos dois códigos, para facilitar a comunicação entre os módulos, utilizou-se de uma máquina de estados para visualizar mais claramente a definição da comunicação entre a Toradex e a MBED. Máquinas de estado são dispositivos que armazenam o status de um objeto em um tempo específico de acordo com a entrada que ele recebe. Um estado é uma combinação específica dentre várias possíveis para um objeto, que não descreve exatamente compo ele funciona, mas apenas a "posição" dele em um determinado momento.  Os diagramas da Toradex e da MBED estão expostos abaixo, explicando mais claramente quais estados cada dispositivo envolvido no processo de caminhada da Formiga pode assumir. 
+Nos dois códigos, para facilitar a comunicação entre os módulos, utilizou-se de máquina de estados para visualizar mais claramente as etapas da comunicação entre usuário e Toradex, e entre Toradex e MBED. Os diagramas da Toradex e da MBED estão expostos abaixo, explicando mais claramente quais estados cada dispositivo envolvido no processo de caminhada da Formiga pode assumir. 
 
 Para a Toradex, temos 3 estados: 
 -"SENDING_COMMAND", que é o estado inicial e recebe as orirentações do usuário a respeito da movimentação da formiga desejada e, tendo entendido a mensagem, transmite esse sinal  e encaminha o sistema para a finalização tendo sido já performado o movimento desejado;
