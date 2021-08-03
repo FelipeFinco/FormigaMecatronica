@@ -135,13 +135,19 @@ void move_legs(double progress)
 {
     for (size_t i = 0; i < 6; i++)
     {
+        double oriented_progress = progress;
+        //if the servo should move backwards, the progress will be the opposite
+        if(servos[i].direction == 0)
+        {
+            oriented_progress = -oriented_progress;
+        }
         if(servos[i].vert == 0)
         {
-            servos[i].output = horizontal_movement(servos[i].phase+progress);
+            servos[i].output = horizontal_movement(servos[i].phase+oriented_progress);
         }
         else
         {
-            servos[i].output = vertical_movement(servos[i].phase+progress);
+            servos[i].output = vertical_movement(servos[i].phase+oriented_progress);
         }
     }
     /*
@@ -152,7 +158,7 @@ void move_legs(double progress)
     servo_vertical_legC = servos[4].output;
     servo_horizontal_legC = servos[5].output;
     */
-    printf("%f,%f",servos[0].phase+progress,servos[0].output);
+    printf("%f,%f",progress,servos[0].output);
 }
 
 int main() {
