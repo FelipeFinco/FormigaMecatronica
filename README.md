@@ -112,4 +112,5 @@ Caso a mensagem seja recebida e enviada diretamente do terminal, tanto a Toradex
 
 # Conclusão
 
+Conseguimos ao final do projeto desenvolver, compilar e enviar o programa para ambas as plataformas. Procurou-se que estes programas fossem bem estruturados e com uma lógica com um certo nível de complexidade para ser eficiente no envio e recebimento de mensagens. Como não foi possível fazer o protocolo CAN funcionar no hardware disponível, a única forma em que encontramos para realizar a comunicação com as placas foi através do uso de printf e scanf, em que nós fazíamos o envio na mão das strings via terminal. Para fins acadêmicos, o propósito de criar familiaridade no desenvolvimento de softwares embarcados foi alcançado, utilizando para isso plataformas Linux e Git, entre outros assuntos aprendidos na matéria.
 
