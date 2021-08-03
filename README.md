@@ -95,7 +95,7 @@ O processo de desenvolvimento do código foi feito no computador dos integrantes
 Para a comunicação, como exposto, utilizamos o protocolo CAN. O pacote de dados enviado na mensagem consistia basicamente em uma palavra de cinco caracteres. Cada caractere era um byte, sendo portanto uma palavra um número composto de 40 bits. Essas palavras eram geradas no código que estava na Toradex, a mensagem era transmitida para a MBED e então traduzida e executada, de modo que, para a perna efetuar uma ação, ela precisa basicamente de duas informações, isto é, a fase (0° ou 180°) e o sentido (para frente ou para trás). Sendo assim, para as seis pernas, são necessários pelo menos 12 bits dentre os 40 que são transmitidos a cada instante, como pode ser visto na imagem.
 
 <img src="./img/Can Communication (1).png" align="center"
-     alt="Figura 7" height="200">  
+     alt="Figura 7" height="500">  
 
 Dessa forma, idealmente, ao receber e traduzir a mensagem, a MBED receberia o comando feito pelo usuário e executaria o movimento desejado. 
 
